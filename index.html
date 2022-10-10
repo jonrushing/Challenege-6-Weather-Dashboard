@@ -4,10 +4,38 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="./assets/style.css" />
     <title>Weather Dashboard</title>
 </head>
 <body>
+    <nav class="container-fluid-nav text-center navbar-expand-lg text-bg-dark display-3 ps-5 ">
+        Your Weather Outlook
+    </nav>
     
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-3 bg-primary">
+                <h3 class=p-1>Search A City</h3>
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control" placeholder="City Search" aria-label="City Search" aria-describedby="button-addon2">
+                    <button class="btn btn-secondary btn-outline-dark" type="button" id="searchBtn">Submit</button>
+                  </div>
+                  <div class="container-fluid text-center">
+                    <button class="btn btn-secondary btn-outline-dark mb-4" type="button" id="clearHistor">Clear History</button>
+                  </div>
+                  <form class="p-1" id="searchHistory">
+                    citys name
+
+                  </form>
+            </div>
+            
+        </div>
+    </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" 
+    integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" 
+    crossorigin="anonymous"></script>
 </body>
 </html>
