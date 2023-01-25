@@ -3,38 +3,10 @@ const city = document.getElementById('citySearch')
 const searchButton = document.getElementById('searchBtn')
 const fiveDayForecastRow = document.getElementById('fiveDayTemp')
 
-// function mainApiURL() {
-//     currentCity = city.value;
-//     console.log('you just searched for', currentCity );
-
-//     let latlonURL = `http://api.openweathermap.org/geo/1.0/direct?q=${currentCity}&limit=1&appid=${APIkey}`
-
-//     fetch(latlonURL)
-//         .then(function (responce) {
-//            return responce.json();
-//         })
-//         .then(function(data){
-//             return data[0];
-//         })
-//         .then(function(apiArray) {
-//             let lat = apiArray.lat;
-//             let lon = apiArray.lon;
-
-//             let fiveDayUrl = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=imperial&appid=${APIkey}`;
-//              console.log(fiveDayUrl)
-//              return fiveDayUrl
-//         })
+//function that first grabs the longitude and latitude of the city input 
+function currentWeather() {
     
-// }
-
-function currentWeather()
-
-function fiveDayForecast() {
-
     currentCity = city.value;
-    fiveDay = []
-
-    console.log('you just searched for', currentCity );
 
     let latlonURL = `http://api.openweathermap.org/geo/1.0/direct?q=${currentCity}&limit=1&appid=${APIkey}`
 
@@ -49,11 +21,52 @@ function fiveDayForecast() {
             let lat = apiArray.lat;
             let lon = apiArray.lon;
 
+            //Takes the lon and lat and places it into the api url to get the current day weather
+            let currentDayUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=imperial&appid=${APIkey}`;
+             console.log(currentDayUrl) 
+
+             fetch(currentDayUrl)
+                .then(function(responce){
+                    return responce.json();
+                })
+            //takes that current weather data and parses each attribute into its proper place on the card    
+                .then(function(data){
+                    let title = $("<h3>").addClass("card-title").text(data.name + " (" + new Date().toLocaleDateString() + ")");
+                    let img = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
+                    let temp = $("<p>").addClass("card-text").text("Temperature: " + data.main.temp + " °F");
+                    let humid = $("<p>").addClass("card-text").text("Humidity: " + data.main.humidity + "%");
+                    let wind = $("<p>").addClass("card-text").text("Wind Speed: " + data.wind.speed + " MPH");
+            
+                    //combines all elements into one card        
+                    $("#forecast").append(title, img, temp, humid, wind);
+                   
+                })
+        })
+}
+//same sort of thing as current weather funtion this time getting the data for a five day forecast
+function fiveDayForecast() {
+
+    fiveDay = []
+    currentCity = city.value;
+    console.log('you just searched for', currentCity );
+//getting the log and lat for the inputted city from the api
+    let latlonURL = `http://api.openweathermap.org/geo/1.0/direct?q=${currentCity}&limit=1&appid=${APIkey}`
+
+    fetch(latlonURL)
+        .then(function (responce) {
+           return responce.json();
+        })
+        .then(function(data){
+            return data[0];
+        })
+        .then(function(apiArray) {
+            let lat = apiArray.lat;
+            let lon = apiArray.lon;
+//taking that log and lat and plugging it into the weather api
             let fiveDayUrl = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&exclude=minutely,hourly&units=imperial&appid=${APIkey}`;
              console.log(fiveDayUrl)
-             return fiveDayUrl
-            
-             fetch(fiveDayUrl)
+
+                fetch(fiveDayUrl)
                 .then(function(responce){
                     return responce.json();
                 })
@@ -64,6 +77,7 @@ function fiveDayForecast() {
                 .then(function(hourArray){
                     for (let i = 0; i < hourArray.length; i+=8) {
 
+//parsing the data from the api call and placing each attribute into its proper place
                             let titleFive = $("<h3>").addClass("card-title").text(new Date(hourArray[i].dt_txt).toLocaleDateString());
                             let imgFive = $("<img>").attr("src", "https://openweathermap.org/img/w/" + hourArray[i].weather[0].icon + ".png");
                             let colFive = $("<div>").addClass("col-md-2.5");
@@ -83,116 +97,6 @@ function fiveDayForecast() {
 
 searchButton.addEventListener('click', function(event){
     event.preventDefault();
+    currentWeather();
     fiveDayForecast();
 })
-
-
-// fetch(welcomeQueryURL)
-//   .then(function (responce) {
-//     return responce.json();
-//   })
-//   .then(function (data) {
-//     return data.results;
-//   })
-//   .then(function (movieresults) {
-//     let randommovie =
-//       movieresults[Math.floor(Math.random() * movieresults.length)];
-//     let movieID = String(randommovie?.id);
-
-//     //url call for movie that will be displayed
-//     let selectedMovieURL =
-//       "https://api.themoviedb.org/3/movie/" +
-//       movieID +
-//       "?api_key=" +
-//       APIKey +
-//       "&language=en-US&append_to_response=release_dates,watch/providers";
-
-//     // fetching dada from Movie database
-//     fetch(selectedMovieURL)
-//       .then(function (responce) {
-//         return responce.json();
-//       })
-//       .then(function (data) {
-//         console.log(data);
-
-//         //parcing and creating poster url for display
-//         let posterPath = data.poster_path;
-//         console.log(posterPath);
-//         let selectedMoviePoster =
-//           "https://image.tmdb.org/t/p/w500" + posterPath;
-//         console.log(selectedMoviePoster);
-
-//         //parcing movie data(poster img, title, synopsis, genre, runtime) to be displayed on site
-//         let posterIMG = document.createElement("img");
-//         posterIMG.src = selectedMoviePoster;
-//         document.getElementById("poster").append(posterIMG);
-
-//         let title = document.createElement("h1");
-//         title.textContent = data.title;
-//         document.getElementById("movieTitle").append(title);
-
-//         let synopsis = document.createElement("p");
-//         synopsis.textContent = data.overview;
-//         document.getElementById("shortSynop").append(synopsis);
-
-//         let genre = document.createElement("h6");
-//         genre = data.genres[0].name + "/" + data.genres[1].name;
-//         document.getElementById("shortSynop").append(genre);
-
-//         let runtime = document.createElement("h6");
-//         runtime = " " + data.runtime + " minutes";
-//         document.getElementById("shortSynop").append(runtime);
-//       });
-//   });
-
-// const ManagerCard = manager => {
-//     return `<div class="card employee-card m-5">
-//     <div class="card-header bg-primary">
-//         <h2 class="card-title">${manager.name}</h2>
-//         <h3 class="card-title">${manager.getRole()}</h3>
-//     </div>
-//     <div class="card-body">
-//         <ul class="list-group">
-//             <li class="list-group-item">ID: ${manager.id}</li>
-//             <li class="list-group-item">Email: <a href="mailto:${manager.email}">${manager.email}</a></li>
-//             <li class="list-group-item">Office number: ${manager.officeNumber}</li>
-//         </ul>
-//     </div>
-// </div>`;
-// };
-
-// teamDeck = (team) => {
-//     const teamInput = [];
-    
-//         teamInput.push(team
-//             .filter(employee => employee.getRole() === "Manager")
-//             .map(manager => ManagerCard(manager))
-//         );
-//         teamInput.push(team
-//             .filter(employee => employee.getRole() === "Engineer")
-//             .map(engineer => EngineerCard(engineer))
-//             .join("")
-//         );
-//         teamInput.push(team
-//             .filter(employee => employee.getRole() === "Intern")
-//             .map(intern => InternCard(intern))
-//             .join("")
-//         );
-//     const compiledTeam = teamInput.join("");
-    
-//     const finalteam = maintemplate(compiledTeam);
-    
-//     return finalteam;
-//     }
-
-// addManager()
-// .then(addTeamMember)
-//     .then(roster => {
-//         return templates(roster);
-//     })
-//     .then(HTML => {
-//         writeFile(HTML)
-//     })
-//   .catch(err => {
-//  console.log(err);
-//   });
