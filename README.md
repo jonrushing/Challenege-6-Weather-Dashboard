@@ -35,8 +35,10 @@
 
  Deployment Link:
 
-
+ https://jonrushing.github.io/Challenege-6-Weather-Dashboard/
  
  
  ![](assets/screen-shot-1.png)
+ 
+ ![](assets/screen-shot-2.png)
  
